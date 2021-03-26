@@ -3,11 +3,10 @@ package pl.javastart;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
-
-import pl.javastart.dao.UserDao;
-import pl.javastart.dao.UserDetailsDao;
-import pl.javastart.model.User;
-import pl.javastart.model.UserDetails;
+import pl.javastart.dao.ClientDao;
+import pl.javastart.dao.OrderDao;
+import pl.javastart.model.Client;
+import pl.javastart.model.Order;
 
 @SpringBootApplication
 public class SpringJpaBootApplication {
@@ -15,15 +14,23 @@ public class SpringJpaBootApplication {
     public static void main(String[] args) throws InterruptedException {
         ConfigurableApplicationContext ctx = SpringApplication.run(SpringJpaBootApplication.class, args);
 
-        UserDao userDao = ctx.getBean(UserDao.class);
-        User user = new User("johnny234", "strongPass", "johnny@gmail.com");
-        UserDetails userDetails = new UserDetails("John", "Kowalski", "Krakowska 55, Warszawa");
-        user.setDetails(userDetails);
-        userDao.save(user);
+        Client client = new Client("Jan", "Kowalski", "Krakowskie przedmiescie 23, Warszawa");
+        ClientDao clientDao = ctx.getBean(ClientDao.class);
+        clientDao.save(client);
+        System.out.println(client);
 
-        UserDetailsDao userDetailsDao = ctx.getBean(UserDetailsDao.class);
-        UserDetails getUserDetails = userDetailsDao.get(1L);
-        System.out.println(getUserDetails.getUser());
+        Order order = new Order("Telewizor LG", "42, dostawa do domu");
+        order.setClient(client);
+        OrderDao orderDao = ctx.getBean(OrderDao.class);
+        orderDao.save(order);
+
+
+        Order getOrder = orderDao.get(1L);
+        System.out.println(getOrder);
+
+
+        Client getClient = clientDao.get(1L);
+        System.out.println(getClient);
 
         ctx.close();
     }
