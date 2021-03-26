@@ -3,10 +3,13 @@ package pl.javastart;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
+
 import pl.javastart.dao.ClientDao;
 import pl.javastart.dao.OrderDao;
+import pl.javastart.dao.ProductDao;
 import pl.javastart.model.Client;
 import pl.javastart.model.Order;
+import pl.javastart.model.Product;
 
 @SpringBootApplication
 public class SpringJpaBootApplication {
@@ -14,23 +17,23 @@ public class SpringJpaBootApplication {
     public static void main(String[] args) throws InterruptedException {
         ConfigurableApplicationContext ctx = SpringApplication.run(SpringJpaBootApplication.class, args);
 
-        Client client = new Client("Jan", "Kowalski", "Krakowskie przedmiescie 23, Warszawa");
+        Client client = new Client("Jan", "Kowalski", "Krakowskie przedmieście 23, Warszawa");
         ClientDao clientDao = ctx.getBean(ClientDao.class);
         clientDao.save(client);
         System.out.println(client);
 
-        Order order = new Order("Telewizor LG", "42, dostawa do domu");
+        Order order = new Order("z dostawą do domu");
         order.setClient(client);
         OrderDao orderDao = ctx.getBean(OrderDao.class);
         orderDao.save(order);
 
+        Product product1 = new Product("Telewizor LG 42'", 4800.0, "dolby surround");
+        Product product2 = new Product("Telefon Apple iPhone SE", 2200.0, "pokrowiec gratis");
+        ProductDao productDao = ctx.getBean(ProductDao.class);
+        productDao.save(product1);
+        productDao.save(product2);
 
-        Order getOrder = orderDao.get(1L);
-        System.out.println(getOrder);
-
-
-        Client getClient = clientDao.get(1L);
-        System.out.println(getClient);
+        orderDao.addProductsToOrder(order.getId(),product1,product2);
 
         ctx.close();
     }

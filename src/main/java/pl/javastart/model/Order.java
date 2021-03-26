@@ -1,7 +1,10 @@
 package pl.javastart.model;
 
-import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.*;
 
 @Entity
 @Table(name = "client_order")
@@ -9,11 +12,15 @@ public class Order implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_order")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Column(name="id_order")
     private Long id;
-    @Column(nullable = false)
-    private String product;
+    @ManyToMany
+    @JoinTable(name = "order_products",
+            joinColumns = {@JoinColumn(name="order_id", referencedColumnName="id_order")},
+            inverseJoinColumns = {@JoinColumn(name="product_id", referencedColumnName="id_product")}
+    )
+    private List<Product> products = new ArrayList<>();
     @Column(name = "details", length = 512)
     private String orderDetails;
     @ManyToOne
@@ -23,10 +30,12 @@ public class Order implements Serializable {
     public Order() {
     }
 
-    public Order(String product, String orderDetails) {
-        this.product = product;
+    public Order(String orderDetails) {
         this.orderDetails = orderDetails;
     }
+
+    //settery, gettery
+
 
     public Long getId() {
         return id;
@@ -36,12 +45,12 @@ public class Order implements Serializable {
         this.id = id;
     }
 
-    public String getProduct() {
-        return product;
+    public List<Product> getProducts() {
+        return products;
     }
 
-    public void setProduct(String product) {
-        this.product = product;
+    public void setProducts(List<Product> products) {
+        this.products = products;
     }
 
     public String getOrderDetails() {
@@ -62,8 +71,9 @@ public class Order implements Serializable {
 
     @Override
     public String toString() {
-        return "Order [id=" + id + ", product=" + product
-                + ", orderDetails=" + orderDetails + ", "
-                + client.getFirstName() + " " + client.getLastName() + "]";
+        return "Order [id=" + id
+                + ", products=" + products
+                + ", client=" + client.getFirstName() +" "+ client.getLastName()
+                + ", orderDetails=" + orderDetails  + "]";
     }
 }
