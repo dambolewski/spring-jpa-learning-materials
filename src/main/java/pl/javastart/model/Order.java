@@ -15,7 +15,7 @@ public class Order implements Serializable {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name="id_order")
     private Long id;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "order_products",
             joinColumns = {@JoinColumn(name="order_id", referencedColumnName="id_order")},
             inverseJoinColumns = {@JoinColumn(name="product_id", referencedColumnName="id_product")}
@@ -72,8 +72,8 @@ public class Order implements Serializable {
     @Override
     public String toString() {
         return "Order [id=" + id
-                + ", products=" + products
-                + ", client=" + client.getFirstName() +" "+ client.getLastName()
-                + ", orderDetails=" + orderDetails  + "]";
+                + ", orderDetails=" + orderDetails
+                + ", client=" + client.getFirstName() + " " + client.getLastName() + products.size()
+                + ",\n products=" + products + "]";
     }
 }

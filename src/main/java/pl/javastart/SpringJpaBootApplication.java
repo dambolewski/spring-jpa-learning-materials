@@ -35,6 +35,9 @@ public class SpringJpaBootApplication {
 
         orderDao.addProductsToOrder(order.getId(),product1,product2);
 
+        Client getClient = clientDao.get(client.getId());
+        System.out.println("\n"+getClient);
+
         ctx.close();
     }
 }

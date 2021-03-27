@@ -23,15 +23,14 @@ public class Product implements Serializable {
     @ManyToMany(mappedBy = "products")
     private List<Order> orders = new ArrayList<>();
 
-    public Product() {}
+    public Product() {
+    }
 
     public Product(String name, Double price, String details) {
         this.name = name;
         this.price = price;
         this.details = details;
     }
-
-    //settery, gettery
 
 
     public Long getId() {
@@ -68,9 +67,9 @@ public class Product implements Serializable {
 
     @Override
     public String toString() {
-        return "Product [id=" + id + ", name=" + name
+        return "Product [id=" + id
+                + ", name=" + name
                 + ", price=" + price
-                + ", orders number=" + orders.size()
-                + "details=" + details + "]";
+                + ", details=" + details + "]";
     }
 }
