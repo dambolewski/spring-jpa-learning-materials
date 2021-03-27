@@ -14,14 +14,22 @@ public class Client implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_client")
     private Long id;
-    @Column(name = "firstname")
+    @Column(name = "firstname", nullable = false)
     private String firstName;
-    @Column(name = "lastname")
+    @Column(name = "lastname", nullable = false)
     private String lastName;
     @Column(nullable = false)
     private String address;
-    @OneToMany(mappedBy = "client")
+    @OneToMany(mappedBy = "client",
+            fetch = FetchType.EAGER,
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+            orphanRemoval = true)
     private List<Order> orders = new ArrayList<>();
+
+    public void addOrder(Order order) {
+        order.setClient(this);
+        getOrders().add(order);
+    }
 
     public Client() {
     }
@@ -75,7 +83,7 @@ public class Client implements Serializable {
     @Override
     public String toString() {
         return "Client [id=" + id + ", firstName=" + firstName
-                + ", lastName=" + lastName + ", address=" + address
-                + ", orders=" + orders + "]";
+                + ", lastName=" + lastName + ", address=" + address + orders.size()
+                + ",\n orders=" + orders + "]";
     }
 }
